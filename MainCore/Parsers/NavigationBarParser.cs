@@ -1,4 +1,4 @@
-﻿namespace MainCore.Parsers
+namespace MainCore.Parsers
 {
     public static class NavigationBarParser
     {
