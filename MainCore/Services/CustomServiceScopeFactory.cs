@@ -1,5 +1,11 @@
-﻿using MainCore.Tasks.Base;
+using MainCore.Tasks.Base;
 using Microsoft.Extensions.DependencyInjection;
+// Adicionamos a referência para a pasta de Tasks para garantir que ele ache o AttackOasisTask
+using MainCore.Tasks;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MainCore.Services
 {
@@ -57,6 +63,14 @@ namespace MainCore.Services
         {
             switch (task)
             {
+                // ==========================================
+                // NOSSA TAREFA ADICIONADA AQUI!
+                // ==========================================
+                case AttackOasisTask.Task attackOasisTask:
+                    var attackOasisTaskHandler = scope.GetHandler<AttackOasisTask.Task>();
+                    return await attackOasisTaskHandler.HandleAsync(attackOasisTask, cancellationToken);
+                // ==========================================
+
                 case ClaimQuestTask.Task claimQuestTask:
                     var claimQuestTaskHandler = scope.GetHandler<ClaimQuestTask.Task>();
                     return await claimQuestTaskHandler.HandleAsync(claimQuestTask, cancellationToken);
