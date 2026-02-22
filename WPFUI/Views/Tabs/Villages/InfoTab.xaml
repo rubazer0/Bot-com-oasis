@@ -1,13 +1,100 @@
-﻿<v:InfoTabBase
+<v:InfoTabBase
     x:Class="WPFUI.Views.Tabs.Villages.InfoTab"
-    xmlns:v="clr-namespace:WPFUI.Views.Tabs.Villages"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:WPFUI.Views.Tabs.Villages"
-    mc:Ignorable="d"
-    d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    xmlns:v="clr-namespace:WPFUI.Views.Tabs.Villages">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Header="Configuração de Ataque ao Oasis" Grid.Row="0" Padding="10" Margin="0,0,0,10">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBlock Text="Sua Tribo:" VerticalAlignment="Center" Width="100"/>
+                    <ComboBox SelectedIndex="{Binding ViewModel.TribeIndex, RelativeSource={RelativeSource AncestorType=UserControl}}" Width="120">
+                        <ComboBoxItem Content="Romanos"/>
+                        <ComboBoxItem Content="Teutões"/>
+                        <ComboBoxItem Content="Gauleses"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBlock Text="Coordenadas:" VerticalAlignment="Center" Width="100"/>
+                    <TextBlock Text="X:" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="Gray"/>
+                    <TextBox Text="{Binding ViewModel.OasisX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl}}" Width="50" Margin="0,0,15,0"/>
+
+                    <TextBlock Text="Y:" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="Gray"/>
+                    <TextBox Text="{Binding ViewModel.OasisY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl}}" Width="50"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBlock Text="Tropa Base:" VerticalAlignment="Center" Width="100"/>
+                    <TextBox Text="{Binding ViewModel.TroopIndexToUse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl}}" Width="50"/>
+                    <TextBlock Text="(ID 1 a 10)" Foreground="Gray" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,10">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,30,0">
+                        <TextBlock Text="Ataque Herói:" VerticalAlignment="Center" Width="100"/>
+                        <TextBox Text="{Binding ViewModel.HeroAttackPower, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl}}" Width="60"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="EXP Mínima:" VerticalAlignment="Center" Width="80"/>
+                        <TextBox Text="{Binding ViewModel.MinimumExpForHero, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl}}" Width="60"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <Button Content="➕ ADICIONAR OÁSIS À LISTA" 
+                        Command="{Binding ViewModel.AddOasisCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                        Height="30" Background="#FF2196F3" Foreground="White" FontWeight="Bold" Cursor="Hand"/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Header="Lista de Farm Ativa" Grid.Row="1" Padding="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <DataGrid ItemsSource="{Binding ViewModel.OasisList, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                          AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Single"
+                          Background="White" BorderBrush="LightGray" BorderThickness="1">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="X" Binding="{Binding X}" Width="40"/>
+                        <DataGridTextColumn Header="Y" Binding="{Binding Y}" Width="40"/>
+                        <DataGridTextColumn Header="Tropa" Binding="{Binding TroopIndex}" Width="50"/>
+                        <DataGridTextColumn Header="EXP" Binding="{Binding MinExp}" Width="40"/>
+                        <DataGridTextColumn Header="Poder Herói" Binding="{Binding HeroPower}" Width="*"/>
+
+                        <DataGridTemplateColumn Header="Ações" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="Salvar" 
+                                                Command="{Binding ViewModel.SaveOasisCommand, RelativeSource={RelativeSource AncestorType=v:InfoTabBase}}"
+                                                CommandParameter="{Binding}"
+                                                Background="#FF4CAF50" Foreground="White" FontSize="10" Padding="6,2" Margin="0,0,5,0" Cursor="Hand"/>
+
+                                        <Button Content="Remover" 
+                                                Command="{Binding ViewModel.RemoveOasisCommand, RelativeSource={RelativeSource AncestorType=v:InfoTabBase}}"
+                                                CommandParameter="{Binding}"
+                                                Background="#FFE53935" Foreground="White" FontSize="10" Padding="6,2" Cursor="Hand"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Button Grid.Row="1" Content="▶ INICIAR CICLO DE ATAQUES" 
+                        Command="{Binding ViewModel.PlayFarmCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                        Height="40" Margin="0,10,0,0" Background="#FF4CAF50" Foreground="White" FontSize="14" FontWeight="Bold" Cursor="Hand"/>
+            </Grid>
+        </GroupBox>
     </Grid>
 </v:InfoTabBase>
